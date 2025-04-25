@@ -1,0 +1,10 @@
+### GET request to example server
+POST http://localhost:4009/auth/login
+content-type: application/json
+
+{
+  "email": "asif@gmail.com",
+  "password": "asifebrahim"
+}
+> {% client.global.set("token",response.body.token) %}
+###

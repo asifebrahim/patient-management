@@ -1,0 +1,11 @@
+POST http://localhost:4009/api/Patients
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "abcarwawd",
+  "email": "reveredP45erson23@rc.ac.inaw",
+  "address": "6969 james diddy bond lane",
+  "dateOfBirth": "2020-01-01",
+  "registeredDate": "2020-01-01"
+}
