@@ -11,6 +11,9 @@ public class AuthIntegrationTests {
     static void setup() {
         RestAssured.baseURI="http://localhost:4009";
     }
+    private static String authToken;
+
+
     @Test
     public void shouldReturnOkWithValidToken(){
         // 1. Arrange
@@ -34,9 +37,44 @@ public class AuthIntegrationTests {
                 .body("token", notNullValue())
                 .extract().response();
 
+        authToken = response.jsonPath().getString("token");
         System.out.println("Token : "+response.jsonPath().getString("token"));
     }
+    @Test
+    public void getAllPatientsShouldReturnValidToken() {
+        // 1. Arrange: login and get token
+        String loginPayLoad = """
+        {
+            "email": "asif@gmail.com",
+            "password": "asifebrahim"
+        }
+    """;
 
+        Response loginResponse = given()
+                .contentType("application/json")
+                .body(loginPayLoad)
+                .when()
+                .post("/auth/login")
+                .then()
+                .statusCode(200)
+                .body("token", notNullValue())
+                .extract().response();
+
+        String authToken = loginResponse.jsonPath().getString("token");
+        System.out.println("Token : " + authToken);
+
+        Response patientsResponse = given()
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .get("/api/Patients")
+                .then()
+                .statusCode(200)
+                .extract().response();
+
+        // 3. Assert: Verify the patients' data
+        System.out.println("Patients : " + patientsResponse.getBody().prettyPrint());
+    }
 
 
     @Test
